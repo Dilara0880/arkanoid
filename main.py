@@ -1,4 +1,6 @@
 import sys
+import random
+
 import pygame
 
 pygame.init()
@@ -34,7 +36,38 @@ class Rectangular:
                     self.left += min([10, 600 - self.left])
 
 
+
+class Circle:
+    def __init__(self):
+        self.x = 400
+        self.y = 470
+        self.radius = 10
+        self.color = (0, 0, 0)
+        self.delta_x = 10
+        self.delta_y = -10
+
+    def draw(self):
+        pygame.draw.circle(Surface, self.color, (self.x, self.y), self.radius)
+
+    def move(self):
+        self.x = self.x + self.delta_x
+        self.y = self.y + self.delta_y
+
+
+def get_move(circle_x, circle_y, rect_left):
+    if circle_x == 0 or circle_x == 800:
+        circle.delta_x *= -1
+
+    if circle_y == 0:
+        circle.delta_y *= -1
+
+    if rect_left <= circle.x <= rect_left + 200 and circle.y == rect.top:
+        circle.delta_y *= -1
+
+
 rect = Rectangular()
+circle = Circle()
+
 
 while True:
     for event in pygame.event.get():
@@ -44,8 +77,12 @@ while True:
     Surface.fill((240, 248, 255))
 
     rect.move()
+    circle.move()
+
+    get_move(circle.x, circle.y, rect.left)
 
     rect.draw()
+    circle.draw()
 
     pygame.display.flip()
     clock.tick(FPS)
