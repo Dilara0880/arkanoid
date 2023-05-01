@@ -1,6 +1,4 @@
 import sys
-import random
-
 import pygame
 
 pygame.init()
@@ -11,6 +9,7 @@ WIDTH = 800
 Surface = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Arkanoid')
 clock = pygame.time.Clock()
+font = pygame.font.SysFont('Arial', 25)
 FPS = 30
 
 
@@ -34,7 +33,6 @@ class Rectangular:
                 if 0 <= self.left <= 600:
                     self.rect.move_ip(min([10, 600 - self.left]), 0)
                     self.left += min([10, 600 - self.left])
-
 
 
 class Circle:
@@ -65,8 +63,28 @@ def get_move(circle_x, circle_y, rect_left):
         circle.delta_y *= -1
 
 
+class RestartButton:
+    def __init__(self, text):
+        self.x, self.y = 310, 150
+        self.font = pygame.font.SysFont('Arial', 20)
+        self.text = text
+
+    def restart(self):
+        restart_rect = pygame.Rect(250, 100, 300, 200)
+        pygame.draw.rect(Surface, (255, 204, 204), restart_rect)
+        Surface.blit(font.render('Restart Game?', True, (255, 0, 0)), (310, 150))
+        # Surface.blit(font.render('OK', True, (255, 0, 0)), (310, 220))
+        self.text = self.font.render('OK', 1, pygame.Color("White"))
+
+        pygame.display.update()
+
+    def show(self):
+        Surface.blit(ok_button, (self.x, self.y))
+
+
 rect = Rectangular()
 circle = Circle()
+ok_button = RestartButton('OK')
 
 
 while True:
@@ -80,6 +98,8 @@ while True:
     circle.move()
 
     get_move(circle.x, circle.y, rect.left)
+    if circle.y > 600:
+        ok_button.restart()
 
     rect.draw()
     circle.draw()
